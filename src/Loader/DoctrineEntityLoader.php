@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Krajcik\DataBuilderDoctrine\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Krajcik\DataBuilder\Dto\BuilderToGenerateDto;
+use Krajcik\DataBuilderDoctrine\Dto\BuilderToGenerateDto;
 
 final class DoctrineEntityLoader
 {
