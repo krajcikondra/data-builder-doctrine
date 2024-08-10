@@ -51,15 +51,19 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
         ));
         $method->addBody('}');
         $method->addBody(sprintf(
-            'return new %s($parameters, $this->db, $this->em);',
+            'return new %s($parameters, $this->em);',
             $this->pathResolver->getBuilderNamespace($entityClass),
         ));
         return $method;
     }
 
-    protected function generateBuilderFactoryConstructor(Method $builderFactoryConstructor, ClassType $builderFactoryClass): void
-    {
-        parent::generateBuilderFactoryConstructor($builderFactoryConstructor, $builderFactoryClass);
+    protected function generateBuilderFactoryConstructor(
+        Method $builderFactoryConstructor,
+        ClassType $builderFactoryClass
+    ): void {
+        $builderFactoryConstructor->addBody('$this->em = $em;');
+        $builderFactoryConstructor->addBody('$this->faker = null;');
+
         $builderFactoryConstructor
             ->addParameter('em')
             ->setType(EntityManagerInterface::class);
