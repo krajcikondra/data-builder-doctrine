@@ -15,13 +15,15 @@ use Nette\PhpGenerator\PhpNamespace;
 class BuilderCodeCompiler extends CoreBuilderCodeCompiler
 {
 
-    public function precompile(BuilderToGenerateDto $data,): ClassType
+    public function precompile(BuilderToGenerateDto $data): ClassType
     {
         $class = parent::precompile($data);
 
         $class->addProperty('em')
             ->setPrivate()
             ->setType(EntityManagerInterface::class);
+
+        $class->removeProperty('db');
 
         return $class;
     }
@@ -39,11 +41,19 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         ClassType            $class,
         BuilderToGenerateDto $data,
     ): Method {
-        $method = parent::createConstructMethod($class, $data);
+        $parameterType = $this->pathResolver->getParameterClassName($data->getClassName());
+        $method = $class->addMethod('__construct')
+            ->setPublic();
+
+        $method
+            ->addParameter('parameters')
+            ->setType($parameterType);
+
         $method
             ->addParameter('em')
             ->setType(EntityManagerInterface::class);
 
+        $method->addBody('$this->parameters = $parameters;');
         $method->addBody('$this->em = $em;');
         return $method;
     }
