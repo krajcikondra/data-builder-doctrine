@@ -7,6 +7,7 @@ namespace Krajcik\DataBuilderDoctrine\Builder;
 use Doctrine\ORM\EntityManagerInterface;
 use Krajcik\DataBuilder\BuilderCompiler as CoreBuilderCompiler;
 use Krajcik\DataBuilder\Dto\Configuration as BaseConfiguration;
+use Krajcik\DataBuilderDoctrine\CodeCompiler\BuilderCodeCompiler;
 use Krajcik\DataBuilderDoctrine\Dto\Configuration;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
@@ -30,6 +31,7 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
         );
 
         parent::__construct($coreConfiguration);
+        $this->builderCompiler = new BuilderCodeCompiler($this->db, $this->pathResolver, $coreConfiguration);
     }
 
     protected function generateCreateBuilderMethod(ClassType $builderFactoryClass, string $entityClass): Method

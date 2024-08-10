@@ -25,8 +25,13 @@ final class DoctrineEntity
 
         foreach ($reflection->getProperties() as $property) {
             foreach ($property->getAttributes('Doctrine\ORM\Mapping\Column') as $attribute) {
-                $columnDbName = $attribute->getArguments()['name'];
-                $values[$columnDbName] = $property->getName();
+                $arguments = $attribute->getArguments();
+                if (array_key_exists('name', $arguments) === false) {
+                    $values[$property->getName()] = $property->getName();
+                } else {
+                    $columnDbName = $attribute->getArguments()['name'];
+                    $values[$columnDbName] = $property->getName();
+                }
             }
         }
 
