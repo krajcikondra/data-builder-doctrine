@@ -1,0 +1,19 @@
+{
+    "name": "krajcik/data-builder-doctrine",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Krajcik\\DataBuilderDoctrine\\": "src/"
+        }
+    },
+    "require": {
+        "krajcik/data-builder": "^0.1.1",
+        "doctrine/orm": ">=2.19"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.11"
+    },
+    "scripts": {
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+    }
+}
