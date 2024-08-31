@@ -9,6 +9,7 @@ final class Configuration
     public function __construct(
         private string $targetFolder,
         private string $namespace = 'Tests\Builder\Generated',
+        private ?string $customBuilderFolder = null,
     ) {}
 
     public function getTargetFolder(): string
@@ -19,5 +20,10 @@ final class Configuration
     public function getNamespace(): string
     {
         return $this->namespace;
+    }
+
+    public function getCustomBuilderFolder(): ?string
+    {
+        return $this->customBuilderFolder;
     }
 }

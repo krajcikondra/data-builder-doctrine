@@ -28,6 +28,7 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
             dbUser: $dbParams['user'],
             dbPassword: $dbParams['password'],
             namespace: $configuration->getNamespace(),
+            customBuilderFolder: $configuration->getCustomBuilderFolder(),
         );
 
         parent::__construct($coreConfiguration);
