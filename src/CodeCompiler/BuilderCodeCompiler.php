@@ -75,6 +75,7 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         $method->addBody('}');
 
         $primaryKey = $this->db->getStructure()->getPrimaryKey($data->getTableName());
+        $method->addBody('$stmt->execute();');
         $method->addBody('$data = $this->getData();');
         $method->addBody(sprintf('$primaryKey = %s;', $primaryKey ? "'$primaryKey'" : "null"));
         $method->addBody('if (isset($data[$primaryKey]) === true) {');
