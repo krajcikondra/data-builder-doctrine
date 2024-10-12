@@ -74,9 +74,22 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         $method->addBody('    $stmt->setParameter("$name", $value);');
         $method->addBody('}');
 
-        $method->addBody('$stmt->execute();');
-        $method->addBody('$id = $this->em->getConnection()->lastInsertId();');
+        $primaryKey = $this->db->getStructure()->getPrimaryKey($data->getTableName());
+        $method->addBody('$data = $this->getData();');
+        $method->addBody(sprintf('$primaryKey = %s;', $primaryKey ? "'$primaryKey'" : "null"));
+        $method->addBody('if (isset($data[$primaryKey]) === true) {');
+        $method->addBody('    $id = $data[$primaryKey];');
+        $method->addBody('} else {');
+        $method->addBody('    $id = $this->em->getConnection()->lastInsertId($primaryKey);');
+        $method->addBody('}');
+
+
         $method->addBody(sprintf('$entity = $this->em->getRepository(%s::class)->find($id);', $data->getClassName()));
+        $method->addBody(sprintf('if ($entity === null) {', $data->getClassName()));
+        $method->addBody(sprintf('    throw new \Exception("Cannot find record \"" . $id . "\" in table \"%s\"");', $data->getClassName()));
+        $method->addBody(sprintf('}', $data->getClassName()));
+
+
         $method->addBody(sprintf('assert($entity instanceof %s);', $data->getClassName()));
         $method->addBody('return $entity;');
         return $method;
