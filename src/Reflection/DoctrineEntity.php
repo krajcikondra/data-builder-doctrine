@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Krajcik\DataBuilderDoctrine\Reflection;
 
+use Doctrine\ORM\Mapping\Table;
 use ReflectionClass;
 
 final class DoctrineEntity
@@ -11,7 +12,7 @@ final class DoctrineEntity
     public static function getTableName(string $fullClassName): string
     {
         $reflection = new ReflectionClass($fullClassName);
-        $attributes = $reflection->getAttributes(\Doctrine\ORM\Mapping\Table::class);
+        $attributes = $reflection->getAttributes(Table::class);
         return $attributes[0]->getArguments()['name'];
     }
 
