@@ -14,7 +14,6 @@ use Nette\PhpGenerator\PhpNamespace;
 
 class BuilderCodeCompiler extends CoreBuilderCodeCompiler
 {
-
     public function precompile(BuilderToGenerateDto $data): ClassType
     {
         $class = parent::precompile($data);
@@ -38,7 +37,7 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
 
 
     protected function createConstructMethod(
-        ClassType            $class,
+        ClassType $class,
         BuilderToGenerateDto $data,
     ): Method {
         $parameterType = $this->pathResolver->getParameterClassName($data->getClassName());
@@ -59,7 +58,7 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
     }
 
     protected function createBuildAndSaveMethod(
-        ClassType            $class,
+        ClassType $class,
         BuilderToGenerateDto $data,
     ): Method {
         $method = $class->addMethod('buildAndSave')
@@ -67,14 +66,17 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
             ->setReturnType($data->getFullClassName());
         $method->addBody(sprintf('$rsm = new ResultSetMapping();'));
         $method->addBody('$parameterNames = array_map(fn(string $name) => ":" . $name, array_keys($this->getData()));');
-        $method->addBody('$sql = sprintf("INSERT INTO %s (%s) VALUES (%s)", "' . $data->getTableName() . '", implode(", ", array_keys($this->getData())), implode(", ", $parameterNames) );');
+        $method->addBody('$sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)", "' . $data->getTableName() . '",
+             implode(", ", array_keys($this->getData())),
+             implode(", ", $parameterNames) );');
         $method->addBody('$stmt = $this->em->createNativeQuery($sql, $rsm);');
 
         $method->addBody('foreach ($this->getData() as $name => $value) {');
         $method->addBody('    $stmt->setParameter("$name", $value);');
         $method->addBody('}');
 
-        $primaryKey = $this->db->getStructure()->getPrimaryKey($data->getTableName());
+        $primaryKey = $this->dbContext->getStructure()->getPrimaryKey($data->getTableName());
         $method->addBody('$stmt->execute();');
         $method->addBody('$data = $this->getData();');
         $method->addBody(sprintf('$primaryKey = %s;', $primaryKey ? "'$primaryKey'" : "null"));
@@ -86,14 +88,16 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
 
 
         $method->addBody(sprintf('$entity = $this->em->getRepository(%s::class)->find($id);', $data->getClassName()));
-        $method->addBody(sprintf('if ($entity === null) {', $data->getClassName()));
-        $method->addBody(sprintf('    throw new \Exception("Cannot find record \"" . $id . "\" in table \"%s\"");', $data->getClassName()));
-        $method->addBody(sprintf('}', $data->getClassName()));
+        $method->addBody(sprintf('if ($entity === null) {'));
+        $method->addBody(sprintf(
+            '    throw new \Exception("Cannot find record \"" . $id . "\" in table \"%s\"");',
+            $data->getClassName(),
+        ));
+        $method->addBody(sprintf('}'));
 
 
         $method->addBody(sprintf('assert($entity instanceof %s);', $data->getClassName()));
         $method->addBody('return $entity;');
         return $method;
     }
-
 }

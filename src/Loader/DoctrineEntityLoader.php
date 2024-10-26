@@ -9,9 +9,9 @@ use Krajcik\DataBuilderDoctrine\Dto\BuilderToGenerateDto;
 
 final class DoctrineEntityLoader
 {
-
     public function __construct(private EntityManagerInterface $entityManager)
-    {}
+    {
+    }
 
     /**
      * @return BuilderToGenerateDto[]
@@ -28,7 +28,8 @@ final class DoctrineEntityLoader
     /**
      * @return string[]
      */
-    private function getAllEntityClassNames(): array {
+    private function getAllEntityClassNames(): array
+    {
         $metadataFactory = $this->entityManager->getMetadataFactory();
 
         $allMetadata = $metadataFactory->getAllMetadata();
@@ -40,5 +41,4 @@ final class DoctrineEntityLoader
 
         return $entityClasses;
     }
-
 }

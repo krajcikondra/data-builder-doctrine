@@ -17,8 +17,7 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
     public function __construct(
         private EntityManagerInterface $entityManager,
         Configuration $configuration,
-    )
-    {
+    ) {
         $dbParams = $this->entityManager->getConnection()->getParams();
 
         $coreConfiguration = new BaseConfiguration(
@@ -32,7 +31,7 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
         );
 
         parent::__construct($coreConfiguration);
-        $this->builderCompiler = new BuilderCodeCompiler($this->db, $this->pathResolver, $coreConfiguration);
+        $this->builderCompiler = new BuilderCodeCompiler($this->dbContext, $this->pathResolver, $coreConfiguration);
     }
 
     protected function generateCreateBuilderMethod(ClassType $builderFactoryClass, string $entityClass): Method
@@ -74,5 +73,4 @@ final class DoctrineBuilderCompiler extends CoreBuilderCompiler
             ->setPrivate()
             ->setType(EntityManagerInterface::class);
     }
-
 }

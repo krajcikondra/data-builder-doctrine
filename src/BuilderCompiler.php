@@ -12,14 +12,12 @@ use Krajcik\DataBuilderDoctrine\Loader\DoctrineEntityLoader;
 
 final class BuilderCompiler
 {
-
     private DoctrineBuilderCompiler $builderCompiler;
 
     public function __construct(
         private EntityManagerInterface $entityManager,
         Configuration $configuration,
-    )
-    {
+    ) {
         $this->builderCompiler = new DoctrineBuilderCompiler($this->entityManager, $configuration);
     }
 

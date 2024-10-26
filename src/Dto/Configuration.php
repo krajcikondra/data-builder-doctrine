@@ -10,7 +10,8 @@ final class Configuration
         private string $targetFolder,
         private string $namespace = 'Tests\Builder\Generated',
         private ?string $customBuilderFolder = null,
-    ) {}
+    ) {
+    }
 
     public function getTargetFolder(): string
     {
