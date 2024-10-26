@@ -7,6 +7,7 @@ namespace Krajcik\DataBuilderDoctrine\CodeCompiler;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Krajcik\DataBuilder\Dto\BuilderToGenerateDto;
+use Krajcik\DataBuilderDoctrine\Exception\EntityNotFoundPrimaryKeyNotDefinedException;
 use Nette\PhpGenerator\ClassType;
 use Krajcik\DataBuilder\CodeCompiler\BuilderCodeCompiler as CoreBuilderCodeCompiler;
 use Nette\PhpGenerator\Method;
@@ -32,6 +33,7 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         $namespace = parent::precompileNamespace($data);
         $namespace->addUse(EntityManagerInterface::class);
         $namespace->addUse(ResultSetMapping::class);
+        $namespace->addUse(EntityNotFoundPrimaryKeyNotDefinedException::class);
         return $namespace;
     }
 
@@ -90,7 +92,7 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         $method->addBody(sprintf('$entity = $this->em->getRepository(%s::class)->find($id);', $data->getClassName()));
         $method->addBody(sprintf('if ($entity === null) {'));
         $method->addBody(sprintf(
-            '    throw new \Exception("Cannot find record \"" . $id . "\" in table \"%s\"");',
+            '    throw new EntityNotFoundPrimaryKeyNotDefinedException("Cannot find record \"" . $id . "\" in table \"%s\"");',
             $data->getClassName(),
         ));
         $method->addBody(sprintf('}'));
