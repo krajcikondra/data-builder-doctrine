@@ -27,4 +27,10 @@ final class DoctrineEntityTest extends TestCase
             'price' => 'price',
         ], $propertyList);
     }
+
+    public function testGetPropertyName(): void
+    {
+        $propertyName = DoctrineEntity::getPropertyName(MyTestEntity::class, 'nazev');
+        $this->assertSame('name', $propertyName);
+    }
 }

@@ -38,4 +38,10 @@ final class DoctrineEntity
 
         return $values;
     }
+
+    public static function getPropertyName(string $fullClassName, string $columnName): ?string
+    {
+        $propertyAndDbNameList = self::getPropertyAndDbNameList($fullClassName);
+        return $propertyAndDbNameList[$columnName] ?? null;
+    }
 }
