@@ -10,7 +10,7 @@
     },
     "require": {
         "php": ">=8.0",
-        "krajcik/data-builder": "^0.1.1",
+        "krajcik/data-builder": "^1.0",
         "doctrine/orm": "^2.19"
     },
     "require-dev": {
