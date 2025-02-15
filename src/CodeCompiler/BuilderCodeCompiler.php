@@ -133,4 +133,11 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
         $method->addBody('return $entity;');
         return $method;
     }
+
+    protected function appendDbParameterToMethods(Method $method): void
+    {
+        $method->addBody('    ),');
+        $method->addBody('    $this->em,');
+        $method->addBody(');');
+    }
 }
