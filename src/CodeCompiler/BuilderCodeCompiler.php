@@ -76,7 +76,8 @@ class BuilderCodeCompiler extends CoreBuilderCodeCompiler
 
         $method->addBody(sprintf('$rsm = new ResultSetMapping();'));
         $method->addBody('$parameterNames = array_map(fn(string $name) => ":" . $name, array_keys($this->getData()));');
-        $method->addBody('$columnNames = array_map(fn(string $name): string => "`$name`", array_keys($this->getData()));');
+        $method->addBody('$columnNames = array_map(fn(string $name): string =>'
+            . ' "`$name`", array_keys($this->getData()));');
 
         $method->addBody('$sql = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)", "' . $data->getTableName() . '",
